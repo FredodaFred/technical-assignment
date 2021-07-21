@@ -23,36 +23,36 @@ class Pen():
         shape.lower()
         if shape == 'square':
             cv.rectangle(self.blank, (150,150), (400, 400), color.GREEN, thickness = 2)
-            cv.imshow("Shape", self.blank)
+            #cv.imshow("Shape", self.blank)
         elif shape == 'rectangle':
             cv.rectangle(self.blank, (150,100), (350, 450), color.GREEN, thickness = 2)
-            cv.imshow("Shape", self.blank)
+            #cv.imshow("Shape", self.blank)
         elif shape == 'circle':
             cv.circle(self.blank, (250,250), 100, color.GREEN, thickness = 2)
-            cv.imshow("Shape", self.blank)
+            #cv.imshow("Shape", self.blank)
         elif shape == 'triangle':
             cv.line(self.blank, (250, 0), (0, 250), color.GREEN, thickness = 2)
             cv.line(self.blank, (0, 250), (250, 250), color.GREEN, thickness = 2)
             cv.line(self.blank, (250,250), (250, 0), color.GREEN, thickness = 2)
-            cv.imshow("Shape", self.blank)
+            #cv.imshow("Shape", self.blank)
         elif shape == 'trapezoid':
             cv.line(self.blank, (100, 100), (350,100), color.GREEN, thickness = 2)
             cv.line(self.blank, (100, 100), (25,275), color.GREEN, thickness = 2)
             cv.line(self.blank, (25,275), (425, 275), color.GREEN, thickness = 2)
             cv.line(self.blank, (425, 275), (350, 100), color.GREEN, thickness =2)
-            cv.imshow("Shape", self.blank)
+            #cv.imshow("Shape", self.blank)
         elif shape == 'parallelogram':
             cv.line(self.blank, (150, 150), (400, 150), color.GREEN, thickness = 2)
             cv.line(self.blank, (400, 150), (300, 400), color.GREEN, thickness = 2)
             cv.line(self.blank, (300,400), (50, 400), color.GREEN, thickness = 2)
             cv.line(self.blank, (50, 400), (150,150), color.GREEN, thickness = 2)
-            cv.imshow("Shape", self.blank)
+            #cv.imshow("Shape", self.blank)
         elif shape == 'ellipse':
             cv.ellipse(self.blank, (300, 300), (200, 100), 0, 0, 360, color.GREEN, thickness = 2)
-            cv.imshow("Shape", self.blank)
+            #cv.imshow("Shape", self.blank)
         else:
             print("invalid shape")
-        cv.waitKey(0)
+        #cv.waitKey(0)
     def clear(self):
         self.blank[:] = color.BLACK
     def draw_crossSection(self, eccentricity:float, min:float, max: float):
@@ -61,8 +61,8 @@ class Pen():
         min_radius = int(min/2) #we need to make them ints
         max_radius = int(max/2)
         cv.ellipse(self.blank, ( int(self.width/2), int(self.height/2)), (max_radius, min_radius), 0, 0, 360, color.GREEN, thickness = 2)
-        cv.imshow("sectional", self.blank)
-        cv.waitKey(0)
+        #cv.imshow("sectional", self.blank)
+        #cv.waitKey(0)
 
     def draw_arc(self, curve, length):
         self.clear()
@@ -72,14 +72,15 @@ class Pen():
         startAngle = random.randint(0, 150)
         endAngle = random.randint(200, 360)
         cv.ellipse(self.blank, (int(self.width/2), int(self.height/2)), (radius, radius), 0, startAngle, endAngle, color.GREEN, thickness = 2)
-        cv.imshow("arc", self.blank)
-        cv.waitKey(0)
+        #cv.imshow("arc", self.blank)
+        #cv.waitKey(0)
 
     def read_list(self, list):
         self.clear()
         #create and enter output directory
         if not os.path.isdir('output'):
             os.mkdir('output')
+        current_dir = os.getcwd()
         os.chdir('output')
 
         file = open('shape_data.csv', 'w', newline = '')
@@ -92,7 +93,7 @@ class Pen():
                     random.seed(dt.microsecond)
                     max = random.randint(100, 250)
                     min = random.randint(50, max)
-                    self.draw_crossSection(0.0, min, max)
+                    self.draw_crossSection(None, min, max)
                     writer.writerow(['sectional',f"max ={max}", f"min ={min}"])
                     cv.imwrite(f"{item}_{id(item)}.png", self.blank)
                 elif item == 'arc':
@@ -109,3 +110,4 @@ class Pen():
                 self.clear()
 
         file.close()
+        os.chdir(current_dir)
