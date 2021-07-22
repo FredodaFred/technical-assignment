@@ -40,13 +40,16 @@ class ChecklistBox(tk.Frame):
             cb.deselect()
 
 class ImageFrame(tk.Frame):
+    """
+    This class displays our image
+    """
     def __init__(self, parent):
         tk.Frame.__init__(self, parent, height = 600, width = 600, bg = 'black')
         self.imageBox = tk.Label()
         self.imageBox.grid(row = 0, column = 1, columnspan = 2)
-        self.imgs = []
-        self.paths = []
-        self.index = 0
+        self.imgs = [] #The image objects themselves
+        self.paths = [] #The paths in which the image objects were made from
+        self.index = 0 #keeps track of where we are in the list so we can use prev and next
     def setImgs(self, paths):
         'Just gives the paths'
         self.paths = paths
@@ -67,7 +70,7 @@ class ImageFrame(tk.Frame):
             self._displayImg(self.index)
     def initImgs(self):
         'Here we actually create + instantiate the photo image objects'
-        if len(self.paths) != 0:
+        if self.paths is not None:
             for path in self.paths:
                 new_img = ImageTk.PhotoImage(Image.open(path))
                 self.imgs.append(new_img)
@@ -84,7 +87,8 @@ def getImages():
     """
     imgs = []
     if not os.path.isdir('output'):
-        print('No output directory, can\'t display images')
+        print("No current output directory. Creating one, must generate images")
+        os.mkdir('output')
         return
     os.chdir('output')
     files = os.listdir()
@@ -106,7 +110,11 @@ imgBox.setImgs(imgs)
 def genClick():
     pen = Pen()
     pen.read_list(checklist.getCheckedItems())
-    imgBox.addImgs(getImages())
+    if imgBox.paths is None:
+        imgBox.setImgs(getImages())
+        imgBox.initImgs()
+    else:
+        imgBox.addImgs(getImages())
     checklist.deselectAll()
 
 genImages = tk.Button(root, text = "Generate Images", command = genClick, anchor = 'w')
