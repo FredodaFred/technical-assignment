@@ -55,11 +55,13 @@ class ImageFrame(tk.Frame):
         self.paths = paths
     def addImgs(self, paths):
         'takes paths, checks for repeats, then adds an image object as well as the path'
+        os.chdir('output')
         for path in paths:
             if not path in self.paths:
                 new_img = ImageTk.PhotoImage(Image.open(path))
                 self.imgs.append(new_img)
                 self.paths.append(path)
+        os.chdir(current_dir)
     def next(self):
         if self.index < len(self.imgs) - 1: #making sure at least one to the right
             self.index += 1
@@ -70,12 +72,13 @@ class ImageFrame(tk.Frame):
             self._displayImg(self.index)
     def initImgs(self):
         'Here we actually create + instantiate the photo image objects'
+        os.chdir('output')
         if self.paths is not None:
             for path in self.paths:
                 new_img = ImageTk.PhotoImage(Image.open(path))
                 self.imgs.append(new_img)
             self.imageBox.configure(image=self.imgs[0])
-
+        os.chdir(current_dir)
     def _displayImg(self, index):
         if len(self.imgs) > index:
             self.imageBox.configure(image = self.imgs[index])
@@ -94,8 +97,7 @@ def getImages():
     files = os.listdir()
     for file in files:
         if file[-3:] == 'png':
-            #new_img = ImageTk.PhotoImage(Image.open(file))
-            imgs.append('output\\'+file)
+            imgs.append(file)
     os.chdir(current_dir) #return from the output dir
     return imgs
 
